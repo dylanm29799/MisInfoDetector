@@ -24,6 +24,8 @@ def run_pipeline(url: str) -> PipelineResult:
     try:
         audio_path, title = download_audio(url)
         transcript = transcribe_audio(audio_path)
+        if not transcript or not transcript.strip():
+            raise PipelineError("No speech detected in the video. Please choose a video with dialogue.")
         result = fact_check(transcript)
         return PipelineResult(title=title, transcript=transcript, result=result)
     except (DownloadError, TranscriptionError, FactCheckError) as exc:
