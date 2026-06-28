@@ -1,6 +1,7 @@
 # Environment variables / secrets
 .env
 .env.*
+!.env.example
 
 # Python
 __pycache__/
@@ -10,3 +11,10 @@ venv/
 
 # Downloaded media
 downloads/
+
+# Node / frontend
+node_modules/
+dist/
+
+# Local dev database
+*.db
