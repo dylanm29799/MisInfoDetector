@@ -70,6 +70,10 @@ def _inject_browser_cookies(opts: dict, url: str) -> None:
     if not any(h in url for h in _COOKIE_HOSTS):
         return
     import subprocess
+    import platform
+    # Browser cookie injection only works on macOS.
+    if platform.system() != "Darwin":
+        return
     for browser in _BROWSERS:
         try:
             # Check if the browser binary/app exists before telling yt-dlp to
