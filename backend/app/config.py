@@ -39,6 +39,25 @@ class Settings(BaseSettings):
     def cors_origins(self) -> list[str]:
         return [o.strip() for o in self.frontend_origins.split(",") if o.strip()]
 
+    @property
+    def sqlalchemy_database_url(self) -> str:
+        """Return a SQLAlchemy-ready database URL.
+
+        Railway and similar providers often inject a plain PostgreSQL URL
+        (for example, `postgres://...` or `postgresql://...`). SQLAlchemy's
+        psycopg driver expects the `postgresql+psycopg://...` form, so we
+        normalize that here instead of forcing the deployment platform to.
+        """
+        url = self.database_url.strip()
+
+        if url.startswith("postgres://"):
+            return url.replace("postgres://", "postgresql+psycopg://", 1)
+
+        if url.startswith("postgresql://"):
+            return url.replace("postgresql://", "postgresql+psycopg://", 1)
+
+        return url
+
 
 @lru_cache
 def get_settings() -> Settings:
